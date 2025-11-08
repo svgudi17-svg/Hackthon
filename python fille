@@ -1,0 +1,86 @@
+# ai_email_generator_mobile.py
+# Simple AI Integration Email Generator (No SMTP, works offline)
+
+from string import Template
+
+# Plain text version of the email
+PLAIN_TEMPLATE = Template("""
+Hi $recipient_name,
+
+I hope you're doing well.
+
+We're excited to share that our team is now offering AI integration solutions designed to streamline operations, enhance customer experience, and improve decision-making.
+
+Key benefits we can deliver:
+- Automate repetitive workflows
+- Gain insights through intelligent data analysis
+- Personalize customer interactions in real time
+
+We'd love to discuss how AI can fit into your existing systems and bring measurable impact to your business.
+Would you be open to a quick call on $proposed_date or $alternate_date?
+
+Best regards,
+$sender_name
+$sender_title
+$company_name
+$sender_contact
+""")
+
+# HTML version (for email preview)
+HTML_TEMPLATE = Template("""
+<html>
+  <body>
+    <p>Hi $recipient_name,</p>
+    <p>I hope you're doing well.</p>
+    <p><b>We're excited to share</b> that our team is now offering <i>AI integration solutions</i> designed to streamline operations, enhance customer experience, and improve decision-making.</p>
+    <ul>
+      <li>Automate repetitive workflows</li>
+      <li>Gain insights through intelligent data analysis</li>
+      <li>Personalize customer interactions in real time</li>
+    </ul>
+    <p>We'd love to discuss how AI can fit into your existing systems and bring measurable impact to your business.
+    Would you be open to a quick call on <b>$proposed_date</b> or <b>$alternate_date</b>?</p>
+    <p>Best regards,<br>
+       <b>$sender_name</b><br>
+       $sender_title — $company_name<br>
+       $sender_contact
+    </p>
+  </body>
+</html>
+""")
+
+# Function to generate email
+def generate_email(context):
+    plain = PLAIN_TEMPLATE.substitute(context)
+    html = HTML_TEMPLATE.substitute(context)
+    return {
+        "subject": context.get("subject", "AI Integration — Let's Talk"),
+        "plain_body": plain,
+        "html_body": html
+    }
+
+# Example usage
+context = {
+    "recipient_name": "Asha Rao",
+    "sender_name": "Gunashree Harish",
+    "sender_title": "Head of Product",
+    "company_name": "NextGen AI Labs",
+    "sender_contact": "gunashree@example.com | +91 98xxxxxxx",
+    "proposed_date": "Tuesday, Nov 11, 2025",
+    "alternate_date": "Thursday, Nov 13, 2025",
+    "subject": "Empower Your Business with Smart AI Integration"
+}
+
+email = generate_email(context)
+
+# Print output
+print("----- SUBJECT -----")
+print(email["subject"])
+print("\n----- EMAIL BODY -----")
+print(email["plain_body"])
+
+# Create preview file
+with open("preview_email.html", "w", encoding="utf-8") as f:
+    f.write(email["html_body"])
+
+print("\n✅ HTML email preview saved as 'preview_email.html'")
